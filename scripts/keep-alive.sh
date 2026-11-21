@@ -6,8 +6,8 @@
 # Example: ./scripts/keep-alive.sh https://my-store.onrender.com https://my-backend.onrender.com
 # ==============================================================================
 
-STOREFRONT_URL="${1:-http://localhost:8000}"
-BACKEND_URL="${2:-http://localhost:9000/health}"
+STOREFRONT_URL="${1:-https://highfashion-storefront.onrender.com}"
+BACKEND_URL="${2:-https://highfashion-backend.onrender.com/health}"
 INTERVAL_SECONDS=600 # 10 minutes
 
 echo "==> Keep-alive monitor started."

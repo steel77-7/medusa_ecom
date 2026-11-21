@@ -13,8 +13,8 @@ jobs:
       - name: Ping Hosted Endpoints
         run: |
           echo "Pinging Storefront..."
-          curl -sI -m 15 "${{ secrets.STOREFRONT_URL || 'https://your-storefront.onrender.com' }}" || true
+          curl -sI -m 20 "${{ secrets.STOREFRONT_URL || 'https://highfashion-storefront.onrender.com' }}" || true
 
           echo "Pinging Backend Health..."
-          curl -sI -m 15 "${{ secrets.BACKEND_URL || 'https://your-backend.onrender.com/health' }}" || true
+          curl -sI -m 20 "${{ secrets.BACKEND_URL || 'https://highfashion-backend.onrender.com/health' }}" || true
 
