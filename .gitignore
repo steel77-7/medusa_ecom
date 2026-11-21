@@ -1,0 +1,91 @@
+# ==============================================================================
+# High Fashion E-Commerce - Git Ignore Configuration
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Environment Variables & Secrets (CRITICAL)
+# ------------------------------------------------------------------------------
+.env
+.env*.local
+.env.production
+.env.staging
+.env.development
+**/.env
+**/.env.*
+!.env.example
+!.env.docker.example
+
+# ------------------------------------------------------------------------------
+# Dependencies & Package Managers
+# ------------------------------------------------------------------------------
+node_modules/
+**/node_modules/
+.pnpm-store/
+.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------------------------------------------------------
+# Build & Compilation Outputs
+# ------------------------------------------------------------------------------
+.next/
+**/.next/
+out/
+**/out/
+.medusa/
+**/.medusa/
+dist/
+**/dist/
+build/
+**/build/
+.turbo/
+.vercel/
+
+# ------------------------------------------------------------------------------
+# Testing, Coverage & Playwright
+# ------------------------------------------------------------------------------
+coverage/
+**/coverage/
+.playwright/
+.playwright-cli/
+test-results/
+
+# ------------------------------------------------------------------------------
+# Large Binary Assets & Design Files (Exclude from Git)
+# ------------------------------------------------------------------------------
+# Root-level Figma and PDF reference files (~57MB)
+/*.fig
+/*.pdf
+design_reference/
+figma_extracted/
+
+# Root-level test & audit screenshots (keep repo clean and lightweight)
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+
+# ------------------------------------------------------------------------------
+# Agent, IDE & Tool Metadata
+# ------------------------------------------------------------------------------
+.agents/
+.serena/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ------------------------------------------------------------------------------
+# Operating System Artifacts
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+

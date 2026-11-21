@@ -1,0 +1,110 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: highfashion-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-medusa}
+    expose:
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - highfashion-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: highfashion-redis
+    restart: unless-stopped
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - highfashion-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: highfashion-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 9000
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-medusa}?sslmode=disable
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-supersecret}
+      COOKIE_SECRET: ${COOKIE_SECRET:-supersecret}
+      AUTH_MFA_ENCRYPTION_KEY: ${AUTH_MFA_ENCRYPTION_KEY:-972e66bcad7a041defef7a2dc2013e1d6d86f5b120717dffaa8ac3a9de133a20}
+      STORE_CORS: ${STORE_CORS:-http://localhost:8000,http://storefront:8000}
+      ADMIN_CORS: ${ADMIN_CORS:-http://localhost:9000,http://localhost:5173}
+      AUTH_CORS: ${AUTH_CORS:-http://localhost:9000,http://localhost:8000}
+      MEDUSA_BACKEND_URL: ${MEDUSA_BACKEND_URL:-http://localhost:9000}
+      AUTO_SEED: ${AUTO_SEED:-false}
+    ports:
+      - "${BACKEND_PORT:-9000}:9000"
+    volumes:
+      - backend_uploads:/app/apps/backend/.medusa/server/uploads
+    networks:
+      - highfashion-net
+
+  storefront:
+    build:
+      context: .
+      dockerfile: docker/storefront.Dockerfile
+      args:
+        NEXT_PUBLIC_MEDUSA_BACKEND_URL: ${NEXT_PUBLIC_MEDUSA_BACKEND_URL:-http://localhost:9000}
+        NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: ${NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY:-pk_a1b1a57e199157b891153b25fe6a027815989c7a87fdd5cc874612e8d6723a0c}
+        NEXT_PUBLIC_DEFAULT_REGION: ${NEXT_PUBLIC_DEFAULT_REGION:-in}
+        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-http://localhost:8000}
+        NEXT_PUBLIC_SHOP_NAME: ${NEXT_PUBLIC_SHOP_NAME:-High Fashion}
+        NEXT_PUBLIC_SHOP_DESCRIPTION: ${NEXT_PUBLIC_SHOP_DESCRIPTION:-High Fashion Store}
+    container_name: highfashion-storefront
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      PORT: 8000
+      NODE_ENV: production
+      MEDUSA_BACKEND_URL: ${MEDUSA_BACKEND_URL:-http://backend:9000}
+      NEXT_PUBLIC_MEDUSA_BACKEND_URL: ${NEXT_PUBLIC_MEDUSA_BACKEND_URL:-http://localhost:9000}
+      NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: ${NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY:-pk_a1b1a57e199157b891153b25fe6a027815989c7a87fdd5cc874612e8d6723a0c}
+      NEXT_PUBLIC_DEFAULT_REGION: ${NEXT_PUBLIC_DEFAULT_REGION:-in}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-http://localhost:8000}
+      NEXT_PUBLIC_SHOP_NAME: ${NEXT_PUBLIC_SHOP_NAME:-High Fashion}
+      NEXT_PUBLIC_SHOP_DESCRIPTION: ${NEXT_PUBLIC_SHOP_DESCRIPTION:-High Fashion Store}
+    ports:
+      - "${STOREFRONT_PORT:-8000}:8000"
+    networks:
+      - highfashion-net
+
+volumes:
+  postgres_data:
+    name: highfashion_postgres_data
+  redis_data:
+    name: highfashion_redis_data
+  backend_uploads:
+    name: highfashion_backend_uploads
+
+networks:
+  highfashion-net:
+    name: highfashion_network
+    driver: bridge

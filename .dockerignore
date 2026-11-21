@@ -1,0 +1,42 @@
+# Version control & local environments
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+*.log
+
+# Dependencies and caches
+node_modules
+final/node_modules
+final/apps/backend/node_modules
+final/apps/storefront/node_modules
+.pnpm-store
+
+# Build outputs
+.next
+final/apps/storefront/.next
+.medusa
+final/apps/backend/.medusa
+dist
+build
+
+# Large media, design assets, and screenshots from project root
+/*.fig
+/*.pdf
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+/*.mp4
+design_reference
+figma_extracted
+
+# Testing, agent & tool artifacts
+.playwright
+.playwright-cli
+.agents
+.serena
+.turbo
+coverage
+

@@ -1,0 +1,19 @@
+# ==============================================================================
+# Production Overlay: Adds Nginx Reverse Proxy for single-port/domain routing
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# ==============================================================================
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: highfashion-nginx
+    restart: unless-stopped
+    depends_on:
+      - storefront
+      - backend
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - highfashion-net
