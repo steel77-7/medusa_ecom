@@ -20,7 +20,8 @@ if [ -n "$DATABASE_URL" ]; then
   PUB_KEY="${NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY:-pk_a1b1a57e199157b891153b25fe6a027815989c7a87fdd5cc874612e8d6723a0c}"
   node -e "
     const { Client } = require('pg');
-    const client = new Client({ connectionString: process.env.DATABASE_URL });
+    const ssl = (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=disable')) ? false : { rejectUnauthorized: false };
+    const client = new Client({ connectionString: process.env.DATABASE_URL, ssl });
     client.connect()
       .then(() => client.query(\"UPDATE api_key SET token = '$PUB_KEY' WHERE type = 'publishable';\"))
       .then(() => { console.log('==> Synchronized publishable API key.'); client.end(); })

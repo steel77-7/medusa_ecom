@@ -4,7 +4,7 @@
 databases:
   - name: highfashion-db
     databaseName: medusa
-    user: postgres
+    user: medusa
     plan: free
 
 services:
