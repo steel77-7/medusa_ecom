@@ -11,8 +11,9 @@ fi
 
 # Run initial database seed if explicitly requested
 if [ "$AUTO_SEED" = "true" ]; then
-  echo "==> AUTO_SEED is enabled. Running seed script..."
-  ./node_modules/.bin/medusa exec ./src/scripts/seed.ts || echo "==> Seed execution finished."
+  echo "==> AUTO_SEED is enabled. Running initial data and product seed scripts..."
+  ./node_modules/.bin/medusa exec ./src/migration-scripts/initial-data-seed.ts || echo "==> Initial store seed step finished."
+  ./node_modules/.bin/medusa exec ./src/scripts/seed.ts || echo "==> Product catalog seed finished."
 fi
 
 # Ensure publishable API key in database matches storefront key
