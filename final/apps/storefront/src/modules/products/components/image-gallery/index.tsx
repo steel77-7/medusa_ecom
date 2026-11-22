@@ -12,7 +12,10 @@ type ImageGalleryProps = {
 const ImageGallery = ({ images: rawImages }: ImageGalleryProps) => {
   const images = (rawImages || []).map((img) => ({
     ...img,
-    url: img.url?.startsWith("http://localhost:8000") ? img.url.replace("http://localhost:8000", "") : img.url,
+    url:
+      img.url && img.url.indexOf("/figma/") !== -1
+        ? img.url.substring(img.url.indexOf("/figma/"))
+        : img.url,
   }))
   const [selectedIdx, setSelectedIdx] = useState(0)
   const mainImageContainerRef = useRef<HTMLDivElement>(null)

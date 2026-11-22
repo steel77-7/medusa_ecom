@@ -1,5 +1,6 @@
 import "server-only"
 import { headers } from "next/headers"
+import { getBaseURL } from "./env"
 
 export const STORE_NAME = "High Fashion"
 
@@ -7,7 +8,10 @@ export const DEFAULT_COUNTRY_CODE = (
   process.env.NEXT_PUBLIC_DEFAULT_REGION || "dk"
 ).toLowerCase()
 
-const configuredUrl = () => process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "")
+const configuredUrl = () => {
+  const url = getBaseURL()
+  return url ? url.replace(/\/$/, "") : undefined
+}
 
 const originFromHeaders = (get: (name: string) => string | null) => {
   const host = (get("x-forwarded-host") ?? get("host"))?.split(",")[0].trim()

@@ -18,10 +18,36 @@ export async function generateMetadata(props: {
   const { countryCode } = await props.params
   const [origin, regions] = await Promise.all([getSiteOrigin(), listRegions()])
 
+  const title = "High Fashion | Find Clothes That Matches Your Style"
+  const description =
+    "Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style."
+  const previewImage =
+    "https://res.cloudinary.com/dtmqwo4sq/image/upload/v1795339836/ss-20261122-145948_uhie2e.png"
+
   return {
-    title: "High Fashion | Find Clothes That Matches Your Style",
-    description:
-      "Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.",
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${origin}/${countryCode}`,
+      siteName: "High Fashion",
+      images: [
+        {
+          url: previewImage,
+          width: 1200,
+          height: 630,
+          alt: "High Fashion Preview",
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [previewImage],
+    },
     alternates: {
       canonical: `${origin}/${countryCode}`,
       languages: {

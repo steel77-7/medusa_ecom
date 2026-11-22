@@ -58,7 +58,21 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       title: `${product.title} | ${STORE_NAME}`,
       description,
       url: productUrl,
-      images: product.thumbnail ? [product.thumbnail] : [],
+      images: product.thumbnail
+        ? [product.thumbnail]
+        : [
+            "https://res.cloudinary.com/dtmqwo4sq/image/upload/v1795339836/ss-20261122-145948_uhie2e.png",
+          ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.title} | ${STORE_NAME}`,
+      description,
+      images: product.thumbnail
+        ? [product.thumbnail]
+        : [
+            "https://res.cloudinary.com/dtmqwo4sq/image/upload/v1795339836/ss-20261122-145948_uhie2e.png",
+          ],
     },
   }
 }

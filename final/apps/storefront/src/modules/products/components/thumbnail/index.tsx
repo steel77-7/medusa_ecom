@@ -25,12 +25,15 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   let initialImage = thumbnail || images?.[0]?.url
   let secondaryImage = images && images.length > 1 ? images[1]?.url : null
 
-  if (initialImage && initialImage.startsWith("http://localhost:8000")) {
-    initialImage = initialImage.replace("http://localhost:8000", "")
+  const normalizeUrl = (url?: string | null): string | undefined => {
+    if (!url) return undefined
+    const figmaIdx = url.indexOf("/figma/")
+    if (figmaIdx !== -1) return url.substring(figmaIdx)
+    return url
   }
-  if (secondaryImage && secondaryImage.startsWith("http://localhost:8000")) {
-    secondaryImage = secondaryImage.replace("http://localhost:8000", "")
-  }
+
+  initialImage = normalizeUrl(initialImage)
+  secondaryImage = normalizeUrl(secondaryImage) || null
 
   return (
     <div
