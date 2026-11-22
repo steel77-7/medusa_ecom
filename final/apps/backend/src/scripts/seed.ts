@@ -671,6 +671,9 @@ export default async function seedData({ container }: ExecArgs) {
       metadata.discount_percent = prod.discountPercent
     }
 
+    const storefrontBaseUrl = process.env.STOREFRONT_URL || process.env.NEXT_PUBLIC_BASE_URL || (process.env.STORE_CORS ? process.env.STORE_CORS.split(",")[0].trim() : "http://localhost:8000")
+    const resolvedImages = prod.images.map((url) => url.replace("http://localhost:8000", storefrontBaseUrl))
+
     return {
       title: prod.title,
       handle: prod.handle,
@@ -678,8 +681,8 @@ export default async function seedData({ container }: ExecArgs) {
       description: prod.description,
       status: ProductStatus.PUBLISHED,
       is_giftcard: false,
-      thumbnail: prod.images[0],
-      images: prod.images.map((url) => ({ url })),
+      thumbnail: resolvedImages[0],
+      images: resolvedImages.map((url) => ({ url })),
       shipping_profile_id: shippingProfile.id,
       sales_channels: [{ id: salesChannel.id }],
       collection_id: colId,

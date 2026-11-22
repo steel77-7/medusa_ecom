@@ -22,8 +22,15 @@ const Thumbnail: React.FC<ThumbnailProps> = ({
   alt = "",
   "data-testid": dataTestid,
 }) => {
-  const initialImage = thumbnail || images?.[0]?.url
-  const secondaryImage = images && images.length > 1 ? images[1]?.url : null
+  let initialImage = thumbnail || images?.[0]?.url
+  let secondaryImage = images && images.length > 1 ? images[1]?.url : null
+
+  if (initialImage && initialImage.startsWith("http://localhost:8000")) {
+    initialImage = initialImage.replace("http://localhost:8000", "")
+  }
+  if (secondaryImage && secondaryImage.startsWith("http://localhost:8000")) {
+    secondaryImage = secondaryImage.replace("http://localhost:8000", "")
+  }
 
   return (
     <div

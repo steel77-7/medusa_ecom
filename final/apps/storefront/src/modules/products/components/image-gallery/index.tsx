@@ -9,7 +9,11 @@ type ImageGalleryProps = {
   images: HttpTypes.StoreProductImage[]
 }
 
-const ImageGallery = ({ images }: ImageGalleryProps) => {
+const ImageGallery = ({ images: rawImages }: ImageGalleryProps) => {
+  const images = (rawImages || []).map((img) => ({
+    ...img,
+    url: img.url?.startsWith("http://localhost:8000") ? img.url.replace("http://localhost:8000", "") : img.url,
+  }))
   const [selectedIdx, setSelectedIdx] = useState(0)
   const mainImageContainerRef = useRef<HTMLDivElement>(null)
   const mainImageWrapRef = useRef<HTMLDivElement>(null)
